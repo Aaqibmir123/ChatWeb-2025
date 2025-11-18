@@ -1,0 +1,25 @@
+/* register.css */
+.register-container {
+  width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1890ff;
+}
+
+.register-form .ant-form-item {
+  margin-bottom: 15px;
+}
+
+.register-form .ant-btn {
+  background-color: #1890ff;
+  border: none;
+}
