@@ -1,0 +1,14 @@
+# Node modules
+**/node_modules/
+
+# Environment files
+**/.env
+
+# VSCode settings
+**/.vscode/
+
+# Logs
+*.log
+
+# Next.js build folder
+Frontend/.next/
