@@ -5,6 +5,7 @@ import { respondToFriendRequest } from "@/app/services/addFriend";
 const AcceptRequest = ({ requestId}) => {
   const handleAccept = async () => {
          const res = await respondToFriendRequest(requestId);
+         console.log("Accept Request Response:", res);
           if (res.status === 200) {
             onSuccess();
           } 
@@ -12,7 +13,7 @@ const AcceptRequest = ({ requestId}) => {
 
   return (
     <button onClick={handleAccept} className="btn btn-primary">
-      Confirm
+      Confirm 
     </button>
   );
 };

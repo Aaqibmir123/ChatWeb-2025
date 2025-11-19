@@ -15,13 +15,13 @@ router.post("/send-friend-request", sendFriendRequest);
 // Get Requests of receiver
 router.get("/get-friend-requests/:receiverId", getFriendRequests);
 
-// Accept
-router.post("/accept-friend-request/:requestId", acceptFriendRequest);
+// Accept friend request
+router.post("/accept-friend-request", acceptFriendRequest);
 
 // Decline
 router.post("/decline-friend-request/:requestId", declineFriendRequest);
 
 // Friends List
-router.get("/accept-friend-requests/:userId", getFriendsList);
+router.post("/accept-friend-requests/:userId", getFriendsList);
 
 export default router;

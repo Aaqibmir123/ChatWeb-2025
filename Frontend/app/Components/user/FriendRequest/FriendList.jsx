@@ -8,16 +8,16 @@ const FriendList = () => {
 
   useEffect(() => {
     const user = localStorage.getItem("user")
-    if (user) setUserId(JSON.parse(user).id)
+    if (user) setUserId(JSON.parse(user)._id)
   }, [])
-
   useEffect(() => {
     if (!userId) return
 
     const fetchFriends = async () => {
+      console.log('friends')
       try {
         const res = await getFriendsList(userId)
-        setFriends(res.data)
+        setFriends(res.friends)
       } catch (error) {
         console.error("Error fetching friends list:", error)
       }
@@ -34,7 +34,7 @@ const FriendList = () => {
 
       {friends.map(friend => (
         <div key={friend.friendId} style={{ marginBottom: "10px", padding: "10px", border: "1px solid #ddd", borderRadius: 8 }}>
-          <p>{friend.friendName}</p>
+          <p>{friend.senderEmail}</p>
         </div>
       ))}
     </div>

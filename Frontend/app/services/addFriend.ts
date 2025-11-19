@@ -23,11 +23,11 @@ export const addFriend = async (data: any): Promise<any> => {
 };
 
 export const getFriendRequests = async (receiverId: string): Promise<any> => {
-    try {
+  try {
     const response = await fetch(
       `${API_BASE_URL}/get-friend-requests/${receiverId}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -47,18 +47,25 @@ export const getFriendRequests = async (receiverId: string): Promise<any> => {
 };
 
 export const respondToFriendRequest = async (requestId: string): Promise<any> => {
-
   try {
-    const response = await fetch(`${API_BASE_URL}/accept-friend-request/${requestId}`, {
+    const response = await fetch(`${API_BASE_URL}/accept-friend-request`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      // **FIX HERE:** Wrap the requestId in an object
+      body: JSON.stringify({ requestId }), 
     });
-
-    const result = await response.json();
-
+    
+    // Check for non-OK status before attempting to parse as JSON
     if (!response.ok) {
-      throw new Error(result.message || "Failed to respond to friend request");
+        // Attempt to get the error message from the response body
+        const result = await response.json();
+        throw new Error(result.message || `Add Friend request failed with status: ${response.status}`);
     }
 
+    const result = await response.json();
     return result;
   } catch (error: unknown) {
     const err = error as Error;
@@ -84,7 +91,7 @@ export const cancelFriendRequest = async (requestId: string): Promise<any> => {
 };
 
 export const getFriendsList = async (userId: string): Promise<any> => {
-  console.log("Fetching friends list for userId:", userId);
+  console.log("Fetching friends list for userId sadcsadc:", userId);
   try {
     const response = await fetch( 
       `${API_BASE_URL}/accept-friend-requests/${userId}`,
@@ -97,6 +104,8 @@ export const getFriendsList = async (userId: string): Promise<any> => {
       }
     );
     const result = await response.json();
+
+    console.log(result,'jhjkscjkads')
     if (!response.ok) {
       throw new Error(result.message || "Failed to fetch friends list");
     } 

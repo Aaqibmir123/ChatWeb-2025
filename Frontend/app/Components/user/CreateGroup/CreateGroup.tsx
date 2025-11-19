@@ -4,8 +4,15 @@ import { Modal, Button, Form, Input, Select, Radio, notification } from "antd";
 import { CreateGroup as CreateGroupService } from "@/app/services/createGroup";
 import { getFriendsList } from "@/app/services/addFriend";
 import GroupHistory from "./GroupHistory";
+
 const { TextArea } = Input;
 const { Option } = Select;
+
+// New interface reflecting the actual API return for display (using senderEmail)
+interface FriendItem { 
+  friendId: string; 
+  senderEmail: string; 
+}
 
 interface GroupFormData {
   groupName: string;
@@ -17,14 +24,15 @@ interface GroupFormData {
 const CreateGroupModal = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [friends, setFriends] = useState<Array<{ friendId: string; friendName: string }>>([]);
+  // Use the updated FriendItem interface
+  const [friends, setFriends] = useState<Array<FriendItem>>([]); 
   const [userId, setUserId] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    if (user) setUserId(JSON.parse(user).id);
+    if (user) setUserId(JSON.parse(user)._id);
   }, []);
 
   useEffect(() => {
@@ -33,7 +41,7 @@ const CreateGroupModal = () => {
     const fetchFriends = async () => {
       try {
         const friendsList = await getFriendsList(userId);
-        setFriends(friendsList.data); // assuming your API returns data array
+        setFriends(friendsList.friends); 
       } catch (error) {
         console.error("Failed to fetch friends list:", error);
       }
@@ -89,7 +97,7 @@ const CreateGroupModal = () => {
         title="Create New Group"
         open={visible}
         onCancel={() => setVisible(false)}
-        footer={null} // we use form submit instead
+        footer={null}
       >
         <Form
           form={form}
@@ -113,7 +121,7 @@ const CreateGroupModal = () => {
             <Select mode="multiple" placeholder="Select members">
               {friends.map(friend => (
                 <Option key={friend.friendId} value={friend.friendId}>
-                  {friend.friendName}
+                  {friend.senderEmail} {/* ✅ Using senderEmail for display */}
                 </Option>
               ))}
             </Select>
@@ -134,7 +142,7 @@ const CreateGroupModal = () => {
         </Form>
       </Modal>
 
-        <GroupHistory />
+      <GroupHistory />
     </div>
 
   );

@@ -48,7 +48,6 @@ const items = [
         key: "7",
         label: <Link href="/logout">Logout</Link>, 
         icon: <LogoutOutlined />,
-        danger: true,
     },
 ];
 

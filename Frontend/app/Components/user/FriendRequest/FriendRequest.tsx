@@ -8,23 +8,23 @@ import CancelRequest from "./CancelRequest";
 
 const Request = () => {
   const userId = localStorage.getItem("user");
-  const recievedId = userId ? JSON.parse(userId).id : null;
-
+  const recievedId = userId ? JSON.parse(userId)._id : null;
   const [requests, setRequests] = useState([]);
+
   useEffect(() => {
+    const fetchFriendRequests = async () => {
+      if (!recievedId) return;
 
-      const fetchFriendRequests = async () => {
-    if (!recievedId) return;
-
-    try {
-      const res = await getFriendRequests(recievedId);
-      setRequests(res.data);
-    } catch (error) {
-      console.error("Error fetching friend requests:", error);
-    }
-  };
+      try {
+        const res = await getFriendRequests(recievedId);
+        setRequests(res.requests);
+      } catch (error) {
+        console.error("Error fetching friend requests:", error);
+      }
+    };
     fetchFriendRequests();
   }, [recievedId]);
+
 
   return (
     <div style={{ maxWidth: "600px", margin: "auto", marginTop: "20px" }}>
@@ -33,9 +33,11 @@ const Request = () => {
       {requests.length === 0 && <p>No Friend Requests Found</p>}
 
       {requests.map((req) => (
-        <Card key={req.requestId} style={{ marginBottom: "15px", borderRadius: 10 }}>
+        <Card
+          key={req.senderId}
+          style={{ marginBottom: "15px", borderRadius: 10 }}
+        >
           <Row align="middle">
-
             {/* Avatar */}
             <Col span={4}>
               <Avatar
@@ -53,19 +55,13 @@ const Request = () => {
               </p>
             </Col>
 
-            {/* Buttons in two separate columns */}
             <Col span={4} style={{ textAlign: "center" }}>
-              <AcceptRequest
-                requestId={req.requestId}
-              />
+              <AcceptRequest requestId={req._id} /> 
             </Col>
 
             <Col span={4} style={{ textAlign: "center" }}>
-              <CancelRequest
-                requestId={req.requestId}
-              />
+              <CancelRequest requestId={req.senderId} />
             </Col>
-
           </Row>
         </Card>
       ))}

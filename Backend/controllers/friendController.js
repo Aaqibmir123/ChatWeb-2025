@@ -1,13 +1,8 @@
 import FriendRequest from "../models/friendRequestModel.js";
 
-
-// =============================
-// 1️⃣ Send Friend Request
-// =============================
 export const sendFriendRequest = async (req, res) => {
   try {
     const { senderId, senderEmail, receiverId, receiverUsername } = req.body;
-      console.log(req.body,'freind request body');
     if (!senderId || !receiverId) {
       return res.status(400).json({ message: "Sender & Receiver required" });
     }
@@ -54,6 +49,7 @@ export const getFriendRequests = async (req, res) => {
       receiverId,
       status: "pending",
     });
+    console.log("Fetched Requests:", requests);
 
     res.status(200).json({ requests });
   } catch (error) {
@@ -70,10 +66,12 @@ export const getFriendRequests = async (req, res) => {
 // =============================
 export const acceptFriendRequest = async (req, res) => {
   try {
-    const { requestId } = req.params;
+    const senderId = req.body.requestId;
+    console.log(senderId,'id')
 
-    const request = await FriendRequest.findById(requestId);
 
+    const request = await FriendRequest.findById(senderId);
+          console.log('hello backend',request,'welcome')
     if (!request) {
       return res.status(404).json({ message: "Request not found" });
     }
@@ -129,8 +127,6 @@ export const declineFriendRequest = async (req, res) => {
 export const getFriendsList = async (req, res) => {
   try {
     const { userId } = req.params;
-
-    // Find all accepted
     const friends = await FriendRequest.find({
       $or: [
         { senderId: userId, status: "accepted" },
