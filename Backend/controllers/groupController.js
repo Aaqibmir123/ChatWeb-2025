@@ -3,7 +3,7 @@ import groupModel from "../models/groupModel.js";
 export const createGroup = async (req, res) => {
   try {
     const { admin, groupName, groupDescription, members } = req.body;
-    console.log(req.body,'data');
+    console.log(req.body, "data");
 
     if (!admin || !groupName) {
       return res.status(400).json({ message: "Admin & Group Name required" });
@@ -21,6 +21,7 @@ export const createGroup = async (req, res) => {
       group: newGroup,
     });
   } catch (error) {
+    console.log(error, "error");
     return res.status(500).json({
       message: "Error creating group",
       error: error.message,
@@ -32,7 +33,13 @@ export const getGroupById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const group = await groupModel.find({ admin: id }); // <-- FIXED
+    console.log(id, "hello");
+    const group = await groupModel.find({
+      $or: [
+        { admin: id }, // Check if user (id) is the admin
+        { members: id }, // Check if user (id) is in the members list
+      ],
+    });
 
     if (!group || group.length === 0) {
       return res.status(404).json({ message: "Group not found" });
@@ -46,4 +53,3 @@ export const getGroupById = async (req, res) => {
     });
   }
 };
-

@@ -9,9 +9,9 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 // New interface reflecting the actual API return for display (using senderEmail)
-interface FriendItem { 
-  friendId: string; 
-  senderEmail: string; 
+interface FriendItem {
+  friendId: string;
+  senderEmail: string;
 }
 
 interface GroupFormData {
@@ -25,7 +25,7 @@ const CreateGroupModal = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   // Use the updated FriendItem interface
-  const [friends, setFriends] = useState<Array<FriendItem>>([]); 
+  const [friends, setFriends] = useState<Array<FriendItem>>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -41,7 +41,7 @@ const CreateGroupModal = () => {
     const fetchFriends = async () => {
       try {
         const friendsList = await getFriendsList(userId);
-        setFriends(friendsList.friends); 
+        setFriends(friendsList.friends);
       } catch (error) {
         console.error("Failed to fetch friends list:", error);
       }
@@ -58,7 +58,7 @@ const CreateGroupModal = () => {
       const groupData = {
         groupName: values.groupName,
         groupDescription: values.groupDescription,
-        members: values.members,
+        members: [...values.members, userId],
         visibility: values.visibility,
         admin: userId,
       };
@@ -67,7 +67,9 @@ const CreateGroupModal = () => {
 
       api.success({
         message: "Group Created Successfully!",
-        description: `Group "${result?.groupName || values.groupName}" created.`,
+        description: `Group "${
+          result?.groupName || values.groupName
+        }" created.`,
         placement: "topRight",
       });
 
@@ -119,15 +121,20 @@ const CreateGroupModal = () => {
 
           <Form.Item label="Members" name="members">
             <Select mode="multiple" placeholder="Select members">
-              {friends.map(friend => (
-                <Option key={friend.friendId} value={friend.friendId}>
-                  {friend.senderEmail} {/* ✅ Using senderEmail for display */}
+              {friends.map((friend) => (
+                // Inside the Form.Item for Members
+                <Option key={friend._id} value={friend.senderId}>
+                  {friend.senderEmail}
                 </Option>
               ))}
             </Select>
           </Form.Item>
 
-          <Form.Item label="Visibility" name="visibility" rules={[{ required: true }]}>
+          <Form.Item
+            label="Visibility"
+            name="visibility"
+            rules={[{ required: true }]}
+          >
             <Radio.Group>
               <Radio value="public">Public</Radio>
               <Radio value="private">Private</Radio>
@@ -144,7 +151,6 @@ const CreateGroupModal = () => {
 
       <GroupHistory />
     </div>
-
   );
 };
 
