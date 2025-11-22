@@ -11,27 +11,31 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setLoggedInUser(parsedUser);
-      }
-    }
-  }, []);
+ useEffect(() => {
+  if (typeof window !== 'undefined') {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await getAllUsers();
-        setUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-    fetchUsers();
-  }, []);
+      // Fix: make async to avoid synchronous cascade render
+      setTimeout(() => {
+        setLoggedInUser(parsedUser);
+      }, 0);
+    }
+  }
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  fetchUsers();
+}, []);
+
 
   const AddFriend = async (clickedUser) => {
     if (!loggedInUser) {

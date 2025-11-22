@@ -38,7 +38,6 @@ export const groupChat = async (req, res) => {
       data: newMessage,
     });
   } catch (error) {
-    console.error("Group Chat Error:", error);
     return res.status(500).json({
       message: "Internal server error",
       error,
@@ -58,10 +57,8 @@ export const getGroupMessages = async (req, res) => {
       .sort({ createdAt: 1 })
       .populate("senderId", "name");
 
-      console.log(messages, "messages")
     return res.status(200).json(messages);
   } catch (error) {
-    console.error("Group Chat Error:", error);
     return res.status(500).json({
       message: "Internal server error",
       error,

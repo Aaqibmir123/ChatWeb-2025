@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col } from 'antd';
 import { GetGroupById } from '@/app/services/createGroup';
 import { useRouter } from "next/navigation";
+import { GroupData } from '@/app/types';
 
 const GroupHistory = () => {
 
-  const [groupHistory, setGroupHistory] = useState([]);
+  const [groupHistory, setGroupHistory] = useState<GroupData[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const GroupHistory = () => {
     fetchGroupHistory();
   }, []);
 
-  const handleGroupClick = (group) => {
+  const handleGroupClick = (group:GroupData) => {
   router.push(`/chat/${group._id}`);
   };
 

@@ -1,22 +1,17 @@
-'use client'
+"use client"
 import React, { useEffect, useState } from 'react'
 import { getFriendsList } from '@/app/services/addFriend'
 
 const FriendList = () => {
-  const [userId, setUserId] = useState(null)
   const [friends, setFriends] = useState([])
 
   useEffect(() => {
     const user = localStorage.getItem("user")
-    if (user) setUserId(JSON.parse(user)._id)
-  }, [])
-  useEffect(() => {
-    if (!userId) return
+    if (!user) return
 
     const fetchFriends = async () => {
-      console.log('friends')
       try {
-        const res = await getFriendsList(userId)
+        const res = await getFriendsList(JSON.parse(user)._id)
         setFriends(res.friends)
       } catch (error) {
         console.error("Error fetching friends list:", error)
@@ -24,7 +19,7 @@ const FriendList = () => {
     }
 
     fetchFriends()
-  }, [userId])
+  }, [])
 
   return (
     <div style={{ maxWidth: "600px", margin: "auto", marginTop: "20px" }}>

@@ -5,9 +5,13 @@ import userRoutes from "./routes/userRoutes.js";
 import connectDB from "./config/db.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import friendRoutes from "./routes/friendRoutes.js";
+import {createServer} from "http";
+import { initSocket } from "./socket.js";
 dotenv.config();
 
 const app = express();
+
+const server = createServer(app);
 app.use(cors());
 app.use(express.json());
 
@@ -25,7 +29,8 @@ app.get("/", (req, res) => {
   res.send("Backend server is running!");
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  initSocket(server);
   
  });

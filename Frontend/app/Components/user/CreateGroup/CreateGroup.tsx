@@ -8,19 +8,7 @@ import GroupHistory from "./GroupHistory";
 const { TextArea } = Input;
 const { Option } = Select;
 
-// New interface reflecting the actual API return for display (using senderEmail)
-interface FriendItem {
-  friendId: string;
-  senderEmail: string;
-}
-
-interface GroupFormData {
-  groupName: string;
-  groupDescription: string;
-  members: string[];
-  visibility: "public" | "private";
-}
-
+import { FriendItem, GroupFormData } from "@/app/types/index";
 const CreateGroupModal = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -75,10 +63,12 @@ const CreateGroupModal = () => {
 
       form.resetFields();
       setVisible(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as Error;
+
       api.error({
         message: "Group Creation Failed",
-        description: error.message || "Unknown error",
+        description: err.message || "Unknown error",
         placement: "topRight",
       });
       console.error(error);
